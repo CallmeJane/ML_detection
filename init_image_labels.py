@@ -134,6 +134,14 @@ def trans_labels(name_path,lable_path,image_path):
     for name in name_file:
         read(lable_path,name[0:-1], image_path,new_labels_path,isWindows)
 
+def get_all_names(image_path,names):
+    f1 = open(names, 'a')
+    for filename in os.listdir(image_path):
+        f1.write(filename.rstrip('.jpg'))
+        f1.write("\n")
+        print(filename)
+    f1.close()
+
 #接收三个参数：图片名字文件路径(name_path)，图片路径(image_path)，标签路径(labels_path)
 #根据当前路径将数据当拷贝到对应的目录下（相对目录）
 if __name__ == '__main__':
@@ -143,6 +151,7 @@ if __name__ == '__main__':
     parser.add_argument('--lp', type=str, default='data/coco/labels/', help='labels_path')
 
     opt = parser.parse_args()
+    get_all_names(opt.ip,opt.np)
     system = platform.system()
     new_image_path=""
     if (system == 'Windows'):
