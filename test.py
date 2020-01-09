@@ -67,7 +67,8 @@ def test(cfg,
         _, _, height, width = imgs.shape  # batch size, channels, height, width
 
         # Plot images with bounding boxes
-        if batch_i == 0 and not os.path.exists('test_batch0.jpg'):
+        if batch_i == 0 :
+            '''and not os.path.exists('test_batch0.jpg')'''
             plot_images(imgs=imgs, targets=targets, paths=paths, fname='test_batch0.jpg')
 
         # Run model
@@ -110,6 +111,33 @@ def test(cfg,
             #                      'bbox': [floatn(x, 3) for x in box[di]],
             #                      'score': floatn(d[4], 5)})
 			#
+
+            image_id =Path(paths[si])
+            box = pred[:, :4].clone()  # xyxy
+            scale_coords(imgs[si].shape[1:], box, shapes[si])  # to original shape
+            #box = xyxy2xywh(box)  # xywh
+            #box[:, :2] -= box[:, 2:] / 2  # xy center to top-left corner
+            file1=open('D:\\temp\zf1921240_liujie\predicted_file_level1\det_test_不带电芯充电宝.txt','a')
+            file2=open('D:\\temp\zf1921240_liujie\predicted_file_level1\det_test_带电芯充电宝.txt','a')
+            for di, d in enumerate(pred):
+                temp=''
+                (filepath,tempfilename)=os.path.split(image_id)
+                #分离成文件和后缀
+                (filename,extension)=os.path.splitext(tempfilename)
+                temp+=filename
+                temp+=" "
+                temp+=str(floatn(d[4], 5))
+                for x in box[di]:
+                    temp += " "
+                    temp += str(floatn(x, 3))
+                if(coco91class[int(d[6])]==1):
+                    file2.write(temp+'\n')
+                else:
+                    file1.write(temp+'\n')
+
+            file1.close()
+            file2.close()
+
             ## Clip boxes to image bounds
             clip_coords(pred, (height, width))
 
@@ -203,7 +231,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, default=16, help='size of each image batch')
     parser.add_argument('--img-size', type=int, default=416, help='inference size (pixels)')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='iou threshold required to qualify as detected')
-    parser.add_argument('--conf-thres', type=float, default=0.001, help='object confidence threshold')
+    parser.add_argument('--conf-thres', type=float, default=0.01, help='object confidence threshold')
     parser.add_argument('--nms-thres', type=float, default=0.5, help='iou threshold for non-maximum suppression')
     parser.add_argument('--save-json', action='store_true', help='save a cocoapi-compatible JSON results file')
     parser.add_argument('--device', default='', help='device id (i.e. 0 or 0,1) or cpu')
