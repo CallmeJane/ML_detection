@@ -481,7 +481,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.5):
         # pred[class_pred != 2, 4] = 0.0
 
         # Select only suitable predictions
-        i = (pred[:, 4] > conf_thres) & (pred[:, 2:4] > min_wh).all(1) & (pred[:, 2:4] < max_wh).all(1) & \
+        i = (pred[:, 4] > 0.001) & (pred[:, 2:4] > min_wh).all(1) & (pred[:, 2:4] < max_wh).all(1) & \
             torch.isfinite(pred).all(1)
         pred = pred[i]
 
