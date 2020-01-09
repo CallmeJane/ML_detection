@@ -52,6 +52,12 @@ def read(label_path,filename,image_path,new_label_path,isWindows):
             width = float(lst[4]) - float(lst[2])
             height = float(lst[5]) - float(lst[3])
 
+            if(x_center>width_image or width>width_image or y_center>height_image or height>height_image):
+                input = ""
+                name = label_path
+                create_str_to_txt(label_path, input)
+                continue
+
             lst_new.append(round(x_center / width_image,5))
             lst_new.append(round(y_center / height_image,5))
             lst_new.append(round(width / width_image,5))
