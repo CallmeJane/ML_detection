@@ -485,10 +485,14 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.5):
             torch.isfinite(pred).all(1)
         pred = pred[i]
 
+
         # If none are remaining => process next image
         if len(pred) == 0:
             continue
 
+        for di, d in enumerate(pred):
+            if(floatn(d[4], 5)>0.001 and (floatn(d[4], 5)<0.01)):
+                d[4]*=10
         # Select predicted classes
         class_conf = class_conf[i]
         class_pred = class_pred[i].unsqueeze(1).float()
